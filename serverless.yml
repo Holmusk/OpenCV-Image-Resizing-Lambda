@@ -3,9 +3,14 @@ service: opencv-serverless
 custom:
   pythonRequirements:
     dockerizePip: non-linux
+    dockerExtraFiles:
+      - /lib64/libgthread-2.0.so.0
+      - /lib64/libglib-2.0.so.0
+    useDownloadCache: false
+    useStaticCache: false
     noDeploy: []
-  OPENCV_PROCESS_BUCKET: kriti-images-to-be-resized
-  OPENCV_OUTPUT_BUCKET: kriti-resized-images
+  OPENCV_PROCESS_BUCKET: kriti-original-images-opencv-python
+  OPENCV_OUTPUT_BUCKET: kriti-resized-images-opencv-python
 
 provider:
   name: aws
@@ -26,12 +31,13 @@ provider:
     OPENCV_OUTPUT_BUCKET: ${self:custom.OPENCV_OUTPUT_BUCKET}
 
 functions:
-  opencv:
+  opencv-python-resizer:
     handler: handler.opencv
     events:
       - existingS3:
           bucket: ${self:custom.OPENCV_PROCESS_BUCKET}
-          event: s3:ObjectCreated:*
+          events: 
+            - s3:ObjectCreated:*
 
 plugins:
   - serverless-python-requirements
