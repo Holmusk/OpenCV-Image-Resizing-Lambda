@@ -1,7 +1,5 @@
 import boto3
 import cv2
-import numpy as np
-import uuid
 import os
 
 s3Client = boto3.client('s3')
@@ -11,8 +9,8 @@ def opencv(event, context):
     bucketName = event['Records'][0]['s3']['bucket']['name']
     bucketKey = event['Records'][0]['s3']['object']['key']
 
-    download_path = '/tmp/{}{}'.format(uuid.uuid4(), bucketKey)
-    output_path = '/tmp/{}'.format(bucketKey)
+    download_path = '/tmp/{}'.format(bucketKey)
+    output_path = '/tmp/resized-{}.jpg'.format(bucketKey)
 
     s3Client.download_file(bucketName, bucketKey, download_path)
 
