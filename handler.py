@@ -9,10 +9,10 @@ s3 = boto3.resource('s3')
 
 def opencv(event, context):
     bucketName = event['Records'][0]['s3']['bucket']['name']
-    bucketKey = event['Records'][0]['s3']['object']['key']
+    objectKey = event['Records'][0]['s3']['object']['key']
     img_obj = s3.Object(
         bucket_name=bucketName,
-        key=bucketKey,
+        key=objectKey,
     )
     obj_body = img_obj.get()['Body'].read()
 
@@ -29,10 +29,9 @@ def opencv(event, context):
         raise e
     try:
         resized_imgbuffer.seek(0)
-        resized_key="resized_{key}".format(key=bucketKey)
         resized_imgobj = s3.Object(
         bucket_name=os.environ['OPENCV_OUTPUT_BUCKET'],
-        key=resized_key,
+        key=objectKey,
         )
         resized_imgobj.put(Body=resized_imgbuffer, ContentType='image/jpeg')
     except Exception as e:
