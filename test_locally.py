@@ -1,3 +1,5 @@
+#This file is for testing the image processing functions locally without the utilisation of S3 buckets
+
 import cv2
 import time
 import numpy as np
@@ -24,7 +26,7 @@ if h > w:
        padded_image= np.pad(eq_image, ((0, 0), (pad_width, pad_width), (0, 0)),
                      'constant', constant_values=0)
    else:
-       padded_image= np.pad(img, ((0, 0), (pad_width, pad_width+1), (0, 0)),
+       padded_image= np.pad(eq_image, ((0, 0), (pad_width, pad_width+1), (0, 0)),
                      'constant', constant_values=0)
 elif h < w:
    diff = w-h
