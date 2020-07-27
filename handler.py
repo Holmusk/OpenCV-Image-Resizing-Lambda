@@ -28,7 +28,7 @@ def opencv(event, context):
         # Improve contrast of image with contrast limited adaptive histogram equalization (CLAHE).
         clahe = cv2.createCLAHE(clipLimit=4.0)
 
-        H, S, V = cv2.split(cv2.cvtColor(unsharped_image, cv2.COLOR_RGB2HSV))
+        H, S, V = cv2.split(cv2.cvtColor(unsharped_masking, cv2.COLOR_RGB2HSV))
         eq_V = clahe.apply(V)
         eq_image = cv2.cvtColor(cv2.merge([H, S, eq_V]), cv2.COLOR_HSV2RGB)
         
