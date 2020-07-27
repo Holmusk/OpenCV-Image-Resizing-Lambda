@@ -20,10 +20,12 @@ def opencv(event, context):
      
         img = cv2.imdecode(np.asarray(bytearray(obj_body)), cv2.IMREAD_COLOR)
 
+        #Improve sharpness of image with unsharp masking.
         smoothed_image = cv2.GaussianBlur(img, (9, 9), 10)
-        unsharped_image = cv2.addWeighted(img, 1.5, smoothed_image, -0.5, 0)
+        unsharped_masking = cv2.addWeighted(img, 1.5, smoothed_image, -0.5, 0)
         
         #improve image contrast
+        # Improve contrast of image with contrast limited adaptive histogram equalization (CLAHE).
         clahe = cv2.createCLAHE(clipLimit=4.0)
 
         H, S, V = cv2.split(cv2.cvtColor(unsharped_image, cv2.COLOR_RGB2HSV))
