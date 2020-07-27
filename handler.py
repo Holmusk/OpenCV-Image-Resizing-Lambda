@@ -19,8 +19,41 @@ def opencv(event, context):
     try:
      
         img = cv2.imdecode(np.asarray(bytearray(obj_body)), cv2.IMREAD_COLOR)
-        dim = (299, 299)
-        resized_img = cv2.resize(img, dim, interpolation = cv2.INTER_CUBIC)
+
+        smoothed_image = cv2.GaussianBlur(img, (9, 9), 10)
+        unsharped_image = cv2.addWeighted(img, 1.5, smoothed_image, -0.5, 0)
+        
+        #improve image contrast
+        clahe = cv2.createCLAHE(clipLimit=4.0)
+
+        H, S, V = cv2.split(cv2.cvtColor(unsharped_image, cv2.COLOR_RGB2HSV))
+        eq_V = clahe.apply(V)
+        eq_image = cv2.cvtColor(cv2.merge([H, S, eq_V]), cv2.COLOR_HSV2RGB)
+        
+        #add padding to image
+        h, w = img.shape[:2]
+        if h > w:
+            diff = h-w
+            pad_width = np.floor((diff)/2).astype(np.int)
+            if (diff % 2) == 0:
+                padded_image= np.pad(eq_image, ((0, 0), (pad_width, pad_width), (0, 0)),
+                              'constant', constant_values=0)
+            else:
+                padded_image= np.pad(img, ((0, 0), (pad_width, pad_width+1), (0, 0)),
+                              'constant', constant_values=0)
+        elif h < w:
+            diff = w-h
+            pad_width = np.floor((diff)/2).astype(np.int)
+            if (diff % 2) == 0:
+                padded_image=  np.pad(eq_image, ((pad_width, pad_width), (0, 0), (0, 0)),
+                              'constant', constant_values=0)
+            else:
+                padded_image= np.pad(eq_image, ((pad_width, pad_width+1), (0, 0), (0, 0)),
+                              'constant', constant_values=0)
+        else:
+            padded_image= eq_image
+        dim = (512, 512)
+        resized_img = cv2.resize(padded_image, dim, interpolation = cv2.INTER_CUBIC)
         is_success,img_arr = cv2.imencode('.jpg',resized_img)
         resized_imgbuffer = BytesIO(img_arr)
     except Exception as e:
