@@ -28,9 +28,9 @@ def opencv(event, context):
         # Improve contrast of image with contrast limited adaptive histogram equalization (CLAHE).
         clahe = cv2.createCLAHE(clipLimit=4.0)
 
-        H, S, V = cv2.split(cv2.cvtColor(unsharped_masking, cv2.COLOR_RGB2HSV))
+        H, S, V = cv2.split(cv2.cvtColor(unsharped_masking, cv2.COLOR_BGR2HSV))
         eq_V = clahe.apply(V)
-        eq_image = cv2.cvtColor(cv2.merge([H, S, eq_V]), cv2.COLOR_HSV2RGB)
+        eq_image = cv2.cvtColor(cv2.merge([H, S, eq_V]), cv2.COLOR_HSV2BGR)
         
         #add padding to image
         h, w = img.shape[:2]
@@ -41,7 +41,7 @@ def opencv(event, context):
                 padded_image= np.pad(eq_image, ((0, 0), (pad_width, pad_width), (0, 0)),
                               'constant', constant_values=0)
             else:
-                padded_image= np.pad(img, ((0, 0), (pad_width, pad_width+1), (0, 0)),
+                padded_image= np.pad(eq_image, ((0, 0), (pad_width, pad_width+1), (0, 0)),
                               'constant', constant_values=0)
         elif h < w:
             diff = w-h
