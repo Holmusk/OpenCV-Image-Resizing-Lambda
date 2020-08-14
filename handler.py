@@ -68,8 +68,7 @@ def opencv(event, context):
         #resized_imgbuffer.seek(0)
         resized_imgobj = s3.Object(
         bucket_name=os.environ['OPENCV_OUTPUT_BUCKET'],
-        #key=objectKey,
-        key=objectKey.replace('.jpg', '.json')
+        key=objectKey,
         )
         resized_imgobj.put(
             Body=bytes(json.dumps({'channel_last': resized_img.tolist()}).encode('UTF-8')),
