@@ -1,4 +1,4 @@
-service: opencv-serverless
+service: FoodDx-DEVELOPMENT
 
 custom:
   pythonRequirements:
@@ -10,9 +10,8 @@ custom:
     useDownloadCache: false
     useStaticCache: false
     noDeploy: []
-  OPENCV_PROCESS_BUCKET: kriti-original-images-opencv-python
-  OPENCV_OUTPUT_BUCKET: kriti-resized-images-opencv-python
-
+  OPENCV_PROCESS_BUCKET: kahlil-test-image-upload-bucket
+  OPENCV_OUTPUT_BUCKET: kahlil-test-images-to-be-rated
 provider:
   name: aws
   runtime: python3.8
